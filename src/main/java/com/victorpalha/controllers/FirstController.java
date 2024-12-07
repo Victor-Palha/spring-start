@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RequestMapping("/api")
 @RestController
@@ -36,5 +38,12 @@ public class FirstController {
             }
         }
         return "Product not found";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam Map<String, String> params) {
+        final Set queries = params.entrySet();
+        System.out.println(queries);
+        return "Your Query is " + queries.toString();
     }
 }
