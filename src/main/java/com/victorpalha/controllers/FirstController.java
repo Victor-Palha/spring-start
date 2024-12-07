@@ -53,4 +53,12 @@ public class FirstController {
 
         return "Hello There, " + username.username();
     }
+
+    @PatchMapping("/user/{id}")
+    public String updateUser(@PathVariable String id, @RequestBody User username, @RequestHeader("Authorization") String token) {
+        System.out.println("User Id "+ id);
+        System.out.println("User name "+ username.username());
+        System.out.println("Token "+token);
+        return "Your user profile is updated";
+    }
 }
