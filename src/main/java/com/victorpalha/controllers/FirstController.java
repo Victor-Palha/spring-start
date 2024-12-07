@@ -46,4 +46,11 @@ public class FirstController {
         System.out.println(queries);
         return "Your Query is " + queries.toString();
     }
+
+    record User(String username){}
+    @PostMapping("/user")
+    public String createUser(@RequestBody User username) {
+
+        return "Hello There, " + username.username();
+    }
 }
