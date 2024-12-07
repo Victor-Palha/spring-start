@@ -61,4 +61,10 @@ public class FirstController {
         System.out.println("Token "+token);
         return "Your user profile is updated";
     }
+
+    @PutMapping("/headers")
+    public String updateHeaders(@RequestHeader Map<String, String> headers) {
+        final Set<Map.Entry<String, String>> keys = headers.entrySet();
+        return keys.toString();
+    }
 }
