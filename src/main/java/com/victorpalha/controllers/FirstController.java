@@ -1,5 +1,7 @@
 package com.victorpalha.controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.Set;
 @RequestMapping("/api")
 @RestController
 public class FirstController {
+    record User(String username){}
 
     @GetMapping("/")
     public String index() {
@@ -47,7 +50,6 @@ public class FirstController {
         return "Your Query is " + queries.toString();
     }
 
-    record User(String username){}
     @PostMapping("/user")
     public String createUser(@RequestBody User username) {
 
@@ -66,5 +68,18 @@ public class FirstController {
     public String updateHeaders(@RequestHeader Map<String, String> headers) {
         final Set<Map.Entry<String, String>> keys = headers.entrySet();
         return keys.toString();
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> users() {
+        final User user = new User("1");
+        final User user2 = new User("2");
+        final User user3 = new User("3");
+        final User user4 = new User("4");
+        final User user5 = new User("5");
+
+        final List<User> users = new ArrayList<User>(){{add(user);add(user2);add(user3);add(user4);add(user5);}};
+
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 }
