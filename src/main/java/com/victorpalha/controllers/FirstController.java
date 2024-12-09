@@ -1,5 +1,8 @@
 package com.victorpalha.controllers;
 
+import com.victorpalha.entities.User;
+import com.victorpalha.services.FirstService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +15,17 @@ import java.util.Set;
 @RequestMapping("/api")
 @RestController
 public class FirstController {
-    record User(String username){}
+
+    final
+    FirstService firstService;
+
+    public FirstController(FirstService firstService) {
+        this.firstService = firstService;
+    }
 
     @GetMapping("/")
     public String index() {
-        return "Hello World";
+        return firstService.sayHello();
     }
 
     @GetMapping("/users/{id}")
@@ -27,7 +36,7 @@ public class FirstController {
 
     @GetMapping("/products")
     public String products(@RequestParam String id) {
-        List<String> products = new ArrayList<String>();
+        List<String> products = new ArrayList<>();
         products.add("1");
         products.add("2");
         products.add("3");
@@ -45,21 +54,24 @@ public class FirstController {
 
     @GetMapping("/search")
     public String search(@RequestParam Map<String, String> params) {
-        final Set queries = params.entrySet();
+        final Set<Map.Entry<String, String>> queries = params.entrySet();
         System.out.println(queries);
-        return "Your Query is " + queries.toString();
+        return "Your Query is " + queries;
     }
 
     @PostMapping("/user")
-    public String createUser(@RequestBody User username) {
+    public String createUser(@RequestBody String username) {
+        User user = new User(1, username, "Something");
 
-        return "Hello There, " + username.username();
+        return "Hello There, " + user.name;
     }
 
     @PatchMapping("/user/{id}")
-    public String updateUser(@PathVariable String id, @RequestBody User username, @RequestHeader("Authorization") String token) {
-        System.out.println("User Id "+ id);
-        System.out.println("User name "+ username.username());
+    public String updateUser(@PathVariable String id, @RequestBody String username, @RequestHeader("Authorization") String token) {
+        final int idInt = Integer.parseInt(id);
+        User user = new User(idInt, username, "Hello there");
+        System.out.println("User Id "+ user.getId());
+        System.out.println("User name "+ user.name);
         System.out.println("Token "+token);
         return "Your user profile is updated";
     }
@@ -71,14 +83,19 @@ public class FirstController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> users() {
-        final User user = new User("1");
-        final User user2 = new User("2");
-        final User user3 = new User("3");
-        final User user4 = new User("4");
-        final User user5 = new User("5");
+    public ResponseEntity<List<String>> users() {
+        final User user = new User(1, "One", "Something");
+        final User user2 = new User(2, "Two", "Something");
+        final User user3 = new User(3, "Three", "Something");
+        final User user4 = new User(4, "Four", "Something");
+        final User user5 = new User(5, "Five", "Something");
 
-        final List<User> users = new ArrayList<User>(){{add(user);add(user2);add(user3);add(user4);add(user5);}};
+        final List<String> users = new ArrayList<>();
+        users.add(user.name);
+        users.add(user2.name);
+        users.add(user3.name);
+        users.add(user4.name);
+        users.add(user5.name);
 
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
